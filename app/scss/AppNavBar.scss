@@ -1,0 +1,41 @@
+.nav {
+    position:absolute;
+    box-sizing: border-box;
+    padding-top:2rem;
+    height:100vh;
+    font-size:1.1rem;
+    width:20%;
+    color:#D4D5D5;
+    font-weight: 400;
+    background-color: #202426;
+
+    &__kiln{
+        border-radius: 0.5rem;;
+        padding:1rem 2rem;
+        &:hover{
+            background-color: #373B3D;
+        }
+        a{
+            color:#D4D5D5;
+            text-decoration: none;
+            &:hover{
+                background-color: #373B3D;
+            }
+        }
+    }
+    &__link{
+        border-radius: 0.5rem;
+        padding:1rem 2rem;
+        &:hover{
+            background-color: #373B3D;
+        }
+        a{
+            color:#D4D5D5;
+            text-decoration: none;
+            &:hover{
+                background-color: #373B3D;
+            }
+        }
+
+    }
+}

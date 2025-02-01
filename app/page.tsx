@@ -1,97 +1,83 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import "./scss/home.scss";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 export default function Home() {
-  console.log("hi");
-  
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <div className="home">
+      <div className="home__box">available escroc contracts</div>
+      <div className="home__box">
+        <div className="contract">
+          <Card sx={{ maxWidth: 345 }}>
+            <CardMedia
+              sx={{ height: 140 }}
+              image="/static/images/cards/contemplative-reptile.jpg"
+              title="green iguana"
             />
-          </a>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Scale AI
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Nostrum, illo debitis! Ducimus consequatur voluptate
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Details</Button>
+              <Button size="small">validate</Button>
+            </CardActions>
+          </Card>
+        </div>
+        <div className="contract">
+          <Card sx={{ maxWidth: 345 }}>
+            <CardMedia
+              sx={{ height: 140 }}
+              image="/static/images/cards/contemplative-reptile.jpg"
+              title="green iguana"
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Tesla
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Nostrum, illo debitis! Ducimus consequatur voluptate
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Details</Button>
+              <Button size="small">validate</Button>
+            </CardActions>
+          </Card>
+        </div>
+        <div className="contract">
+          <Card sx={{ maxWidth: 345 }}>
+            <CardMedia
+              sx={{ height: 140 }}
+              image="/static/images/cards/contemplative-reptile.jpg"
+              title="green iguana"
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Kiln
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Nostrum, illo debitis! Ducimus consequatur voluptate
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Details</Button>
+              <Button size="small">validate</Button>
+            </CardActions>
+          </Card>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
