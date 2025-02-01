@@ -1,0 +1,39 @@
+.nav {
+    width:20%;
+    padding-top:2rem;
+    font-size:1.1rem;
+    color:#D4D5D5;
+    font-weight: 400;
+    border-radius: 1rem;;
+    background-color: #202426;
+    height:100vh;
+    box-sizing: border-box;
+
+    &__kiln{
+        padding:1rem 2rem;
+        &:hover{
+            background-color: #373B3D;
+        }
+        a{
+            color:#D4D5D5;
+            text-decoration: none;
+            &:hover{
+                background-color: #373B3D;
+            }
+        }
+    }
+    &__link{
+        padding:1rem 2rem;
+        &:hover{
+            background-color: #373B3D;
+        }
+        a{
+            color:#D4D5D5;
+            text-decoration: none;
+            &:hover{
+                background-color: #373B3D;
+            }
+        }
+
+    }
+}
