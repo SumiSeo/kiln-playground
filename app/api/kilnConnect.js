@@ -13,7 +13,7 @@ export const getDataVaults = async () => {
   );
 };
 
-export const getDataEachVault = async () => {
+export const getDataVault1 = async () => {
   return await k.client.GET(
     "/v1/defi/network-stats?vaults=matic_0x66431b90985212d3b09e27ff9b83cb32f6dd79dc"
   );
