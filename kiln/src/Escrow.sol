@@ -31,7 +31,7 @@ contract Escrow {
 	  *	Corp make depositr on the vault 
 	  */
 	function deposit(uint _id) external payable {
-		require (msg.sender == agreements[_id].payerApproved && msg.value == agreements[_id].amount);
+		require (msg.sender == agreements[_id].payer && msg.value == agreements[_id].amount);
 		agreements[_id].payerApproved = true;
 		// TRANSFER TO VAULT/ARBITER
 	}
