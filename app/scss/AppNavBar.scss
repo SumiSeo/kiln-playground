@@ -4,12 +4,12 @@
     font-size:1.1rem;
     color:#D4D5D5;
     font-weight: 400;
-    border-radius: 1rem;;
     background-color: #202426;
     height:100vh;
     box-sizing: border-box;
 
     &__kiln{
+        border-radius: 0.5rem;;
         padding:1rem 2rem;
         &:hover{
             background-color: #373B3D;
@@ -23,6 +23,7 @@
         }
     }
     &__link{
+        border-radius: 0.5rem;
         padding:1rem 2rem;
         &:hover{
             background-color: #373B3D;
