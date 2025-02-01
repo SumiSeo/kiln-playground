@@ -1,8 +1,15 @@
 pragma solidity ^0.8.0;
 
-import ".\kiln-playground\kiln\lib\forge-std\src\interfaces\IERC4626.sol";
+import "../lib/forge-std/src/interfaces/IERC4626.sol";
 
-contract Vault is IERC4626 {
+contract Vault {
+
+	IERC4626 public token;
+
+	constructor (IERC4626 _token) {
+		token = _token;
+	}
+
     struct Agreement {
         address payer;
         address payee;
@@ -49,85 +56,85 @@ contract Vault is IERC4626 {
         payable(ag.arbiter).transfer(share);
     }
 
-    function calculateYield(uint256 _id) internal view returns (uint256) {
+    function calculateYield(uint256 _id) internal pure returns (uint256) {
         // Placeholder for yield calculation logic
         // This should be replaced with actual yield generation logic
-        return 0;
+        return _id;
     }
 
     // IERC4626 functions to be implemented
-    function deposit(uint256 assets, address receiver) external override returns (uint256) {
-        // Implement IERC4626 deposit logic
-        return 0;
-    }
-
-    function mint(uint256 shares, address receiver) external override returns (uint256) {
-        // Implement IERC4626 mint logic
-        return 0;
-    }
-
-    function withdraw(uint256 assets, address receiver, address owner) external override returns (uint256) {
-        // Implement IERC4626 withdraw logic
-        return 0;
-    }
-
-    function redeem(uint256 shares, address receiver, address owner) external override returns (uint256) {
-        // Implement IERC4626 redeem logic
-        return 0;
-    }
-
-    function totalAssets() external view override returns (uint256) {
-        // Implement IERC4626 totalAssets logic
-        return 0;
-    }
-
-    function convertToShares(uint256 assets) external view override returns (uint256) {
-        // Implement IERC4626 convertToShares logic
-        return 0;
-    }
-
-    function convertToAssets(uint256 shares) external view override returns (uint256) {
-        // Implement IERC4626 convertToAssets logic
-        return 0;
-    }
-
-    function maxDeposit(address receiver) external view override returns (uint256) {
-        // Implement IERC4626 maxDeposit logic
-        return 0;
-    }
-
-    function maxMint(address receiver) external view override returns (uint256) {
-        // Implement IERC4626 maxMint logic
-        return 0;
-    }
-
-    function maxWithdraw(address owner) external view override returns (uint256) {
-        // Implement IERC4626 maxWithdraw logic
-        return 0;
-    }
-
-    function maxRedeem(address owner) external view override returns (uint256) {
-        // Implement IERC4626 maxRedeem logic
-        return 0;
-    }
-
-    function previewDeposit(uint256 assets) external view override returns (uint256) {
-        // Implement IERC4626 previewDeposit logic
-        return 0;
-    }
-
-    function previewMint(uint256 shares) external view override returns (uint256) {
-        // Implement IERC4626 previewMint logic
-        return 0;
-    }
-
-    function previewWithdraw(uint256 assets) external view override returns (uint256) {
-        // Implement IERC4626 previewWithdraw logic
-        return 0;
-    }
-
-    function previewRedeem(uint256 shares) external view override returns (uint256) {
-        // Implement IERC4626 previewRedeem logic
-        return 0;
-    }
+    // function deposit(uint256 assets, address receiver) external override returns (uint256) {
+    //     // Implement IERC4626 deposit logic
+    //     return 0;
+    // }
+    //
+    // function mint(uint256 shares, address receiver) external override returns (uint256) {
+    //     // Implement IERC4626 mint logic
+    //     return 0;
+    // }
+    //
+    // function withdraw(uint256 assets, address receiver, address owner) external override returns (uint256) {
+    //     // Implement IERC4626 withdraw logic
+    //     return 0;
+    // }
+    //
+    // function redeem(uint256 shares, address receiver, address owner) external override returns (uint256) {
+    //     // Implement IERC4626 redeem logic
+    //     return 0;
+    // }
+    //
+    // function totalAssets() external view override returns (uint256) {
+    //     // Implement IERC4626 totalAssets logic
+    //     return 0;
+    // }
+    //
+    // function convertToShares(uint256 assets) external view override returns (uint256) {
+    //     // Implement IERC4626 convertToShares logic
+    //     return 0;
+    // }
+    //
+    // function convertToAssets(uint256 shares) external view override returns (uint256) {
+    //     // Implement IERC4626 convertToAssets logic
+    //     return 0;
+    // }
+    //
+    // function maxDeposit(address receiver) external view override returns (uint256) {
+    //     // Implement IERC4626 maxDeposit logic
+    //     return 0;
+    // }
+    //
+    // function maxMint(address receiver) external view override returns (uint256) {
+    //     // Implement IERC4626 maxMint logic
+    //     return 0;
+    // }
+    //
+    // function maxWithdraw(address owner) external view override returns (uint256) {
+    //     // Implement IERC4626 maxWithdraw logic
+    //     return 0;
+    // }
+    //
+    // function maxRedeem(address owner) external view override returns (uint256) {
+    //     // Implement IERC4626 maxRedeem logic
+    //     return 0;
+    // }
+    //
+    // function previewDeposit(uint256 assets) external view override returns (uint256) {
+    //     // Implement IERC4626 previewDeposit logic
+    //     return 0;
+    // }
+    //
+    // function previewMint(uint256 shares) external view override returns (uint256) {
+    //     // Implement IERC4626 previewMint logic
+    //     return 0;
+    // }
+    //
+    // function previewWithdraw(uint256 assets) external view override returns (uint256) {
+    //     // Implement IERC4626 previewWithdraw logic
+    //     return 0;
+    // }
+    //
+    // function previewRedeem(uint256 shares) external view override returns (uint256) {
+    //     // Implement IERC4626 previewRedeem logic
+    //     return 0;
+    // }
 }
