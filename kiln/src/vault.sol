@@ -1,18 +1,34 @@
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
 
-import ".\kiln-playground\kiln\lib\forge-std\src\interfaces\IERC4626.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC4626.sol";
 
-contract Vault is IERC4626 {
+contract VaultManager {
+    IERC20 public immutable asset;
+    IERC4626 public immutable vault;
+
     struct Agreement {
         address payer;
         address payee;
         address arbiter;
         uint256 amount;
+        uint256 creationTime;
         bool payerApproved;
         bool payeeApproved;
     }
 
     Agreement[] public agreements;
+
+    event AgreementCreated(uint256 indexed id, address payer, address payee, address arbiter, uint256 amount);
+    event AgreementFunded(uint256 indexed id, uint256 depositedAmount);
+    event AgreementReleased(uint256 indexed id, uint256 totalAssets);
+
+    constructor(address _asset, address _vault) {
+        require(_asset != address(0) && _vault != address(0), "Invalid addresses");
+        asset = IERC20(_asset);
+        vault = IERC4626(_vault);
+    }
 
     function createAgreement(
         address _payer,
@@ -20,114 +36,65 @@ contract Vault is IERC4626 {
         address _arbiter,
         uint256 _amount
     ) external returns (uint256) {
-        require(
-            _payer != _payee && _payer != _arbiter && _payee != _arbiter,
-            "Addresses must be different"
-        );
-        agreements.push(Agreement(_payer, _payee, _arbiter, _amount, false, false));
-        return (agreements.length - 1);
+        require(_payer != _payee && _payer != _arbiter && _payee != _arbiter, "Addresses must be different");
+
+        agreements.push(Agreement(_payer, _payee, _arbiter, _amount, block.timestamp, false, false));
+        uint256 agreementId = agreements.length - 1;
+
+        emit AgreementCreated(agreementId, _payer, _payee, _arbiter, _amount);
+        return agreementId;
     }
 
-    function deposit(uint256 _id) external payable {
+    function fundAgreement(uint256 _id) external {
+        require(_id < agreements.length, "Invalid agreement ID");
         Agreement storage ag = agreements[_id];
-        require(msg.sender == ag.payer, "Only payer can deposit");
-        require(msg.value == ag.amount, "Incorrect deposit amount");
+        require(msg.sender == ag.payer, "Only payer can fund");
+        require(!ag.payerApproved, "Already funded");
+
+        // Transférer les fonds du payer vers ce contrat
+        require(asset.transferFrom(msg.sender, address(this), ag.amount), "Transfer failed");
+
+        // Approuver le vault pour le dépôt
+        asset.approve(address(vault), ag.amount);
+
+        // Dépôt dans le vault pour générer des intérêts
+        uint256 depositedShares = vault.deposit(ag.amount, address(this));
+        require(depositedShares > 0, "Deposit failed");
 
         ag.payerApproved = true;
-        payable(ag.payee).transfer(msg.value);
+
+        emit AgreementFunded(_id, ag.amount);
     }
 
-    function distributeYield(uint256 _id) external {
+    function approveAgreement(uint256 _id) external {
+        require(_id < agreements.length, "Invalid agreement ID");
+        Agreement storage ag = agreements[_id];
+        require(msg.sender == ag.payee, "Only payee can approve");
+        require(ag.payerApproved, "Payer must deposit first");
+
+        ag.payeeApproved = true;
+    }
+
+    function releaseFunds(uint256 _id) external {
+        require(_id < agreements.length, "Invalid agreement ID");
         Agreement storage ag = agreements[_id];
         require(ag.payerApproved && ag.payeeApproved, "Agreement not fully approved");
 
-        uint256 yield = calculateYield(_id);
-        uint256 share = yield / 3;
+        // Récupérer la valeur initiale et les intérêts accumulés
+        uint256 shares = vault.balanceOf(address(this));
+        require(shares > 0, "No shares available");
 
-        payable(ag.payer).transfer(share);
-        payable(ag.payee).transfer(share);
-        payable(ag.arbiter).transfer(share);
-    }
+        uint256 totalAssets = vault.redeem(shares, address(this), address(this));
+        require(totalAssets > 0, "Redeem failed");
 
-    function calculateYield(uint256 _id) internal view returns (uint256) {
-        // Placeholder for yield calculation logic
-        // This should be replaced with actual yield generation logic
-        return 0;
-    }
+        // Distribution des fonds
+        uint256 share = totalAssets / 3;
+        uint256 remaining = totalAssets - (2 * share); // Évite les erreurs d'arrondi
 
-    // IERC4626 functions to be implemented
-    function deposit(uint256 assets, address receiver) external override returns (uint256) {
-        // Implement IERC4626 deposit logic
-        return 0;
-    }
+        require(asset.transfer(ag.payer, share), "Transfer to payer failed");
+        require(asset.transfer(ag.payee, share), "Transfer to payee failed");
+        require(asset.transfer(ag.arbiter, remaining), "Transfer to arbiter failed");
 
-    function mint(uint256 shares, address receiver) external override returns (uint256) {
-        // Implement IERC4626 mint logic
-        return 0;
-    }
-
-    function withdraw(uint256 assets, address receiver, address owner) external override returns (uint256) {
-        // Implement IERC4626 withdraw logic
-        return 0;
-    }
-
-    function redeem(uint256 shares, address receiver, address owner) external override returns (uint256) {
-        // Implement IERC4626 redeem logic
-        return 0;
-    }
-
-    function totalAssets() external view override returns (uint256) {
-        // Implement IERC4626 totalAssets logic
-        return 0;
-    }
-
-    function convertToShares(uint256 assets) external view override returns (uint256) {
-        // Implement IERC4626 convertToShares logic
-        return 0;
-    }
-
-    function convertToAssets(uint256 shares) external view override returns (uint256) {
-        // Implement IERC4626 convertToAssets logic
-        return 0;
-    }
-
-    function maxDeposit(address receiver) external view override returns (uint256) {
-        // Implement IERC4626 maxDeposit logic
-        return 0;
-    }
-
-    function maxMint(address receiver) external view override returns (uint256) {
-        // Implement IERC4626 maxMint logic
-        return 0;
-    }
-
-    function maxWithdraw(address owner) external view override returns (uint256) {
-        // Implement IERC4626 maxWithdraw logic
-        return 0;
-    }
-
-    function maxRedeem(address owner) external view override returns (uint256) {
-        // Implement IERC4626 maxRedeem logic
-        return 0;
-    }
-
-    function previewDeposit(uint256 assets) external view override returns (uint256) {
-        // Implement IERC4626 previewDeposit logic
-        return 0;
-    }
-
-    function previewMint(uint256 shares) external view override returns (uint256) {
-        // Implement IERC4626 previewMint logic
-        return 0;
-    }
-
-    function previewWithdraw(uint256 assets) external view override returns (uint256) {
-        // Implement IERC4626 previewWithdraw logic
-        return 0;
-    }
-
-    function previewRedeem(uint256 shares) external view override returns (uint256) {
-        // Implement IERC4626 previewRedeem logic
-        return 0;
+        emit AgreementReleased(_id, totalAssets);
     }
 }
