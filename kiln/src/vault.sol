@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import ".\kiln-playground\kiln\lib\forge-std\src\interfaces\IERC4626.sol";
 
 contract Vault is IERC4626 {
     struct Agreement {
