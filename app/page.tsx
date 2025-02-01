@@ -1,5 +1,8 @@
-import "./scss/base.scss";
+import "./scss/home.scss";
+import "./scss/_base.scss";
+import "./scss/_reset.scss";
+import AppNavbar from "./components/AppNavbar";
 
 export default function Home() {
-  return <div></div>;
+  return <div className="home">WELCOME TO KLIN~!!!!!!! </div>;
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import AppNavbar from "./components/AppNavbar";
-
+import "./scss/layout.scss";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,10 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <AppNavbar />
-        {children}
-      </body>
+      <div className="layout">
+        <body className={inter.className}>
+          <AppNavbar />
+          {children}
+        </body>
+      </div>
     </html>
   );
 }

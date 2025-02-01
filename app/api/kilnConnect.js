@@ -7,10 +7,16 @@ const k = new Kiln({
   //testnet defi vault
   //apiToken: "kiln_hnQNjKOhEhFfLOEcOUJrgrtc2LGcgqUj4a6MoyAt",
 });
-export const getData = async () => {
+export const getDataVaults = async () => {
+  const options = {
+    method: "GET",
+  };
+
+  return await k.client.GET("/v1/defi/stakes", options);
+};
+
+export const getDataEachVault = async () => {
   return await k.client.GET(
     "/v1/defi/network-stats?vaults=matic_0x66431b90985212d3b09e27ff9b83cb32f6dd79dc"
   );
 };
-
-

@@ -1,12 +1,12 @@
 .nav {
-    width:20%;
+    position:absolute;
     padding-top:2rem;
+    height:100vh;
     font-size:1.1rem;
+    width:20%;
     color:#D4D5D5;
     font-weight: 400;
     background-color: #202426;
-    height:100vh;
-    box-sizing: border-box;
 
     &__kiln{
         border-radius: 0.5rem;;

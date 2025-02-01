@@ -1,12 +1,13 @@
 "use client";
 import { useEffect } from "react";
-import { getData } from "../api/kilnConnect";
+import { getDataVaults } from "../api/kilnConnect";
+import "../scss/Markets4626.scss";
 
 export default function Markets4626() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getData();
+        const res = await getDataVaults();
         console.log("res", res);
       } catch (error) {
         console.error("Error fetching data:", error);
