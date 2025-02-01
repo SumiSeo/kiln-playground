@@ -6,11 +6,13 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Header from "./components/Header";
+import ConnectButtonHeader from "./components/ConnectButtonHeader";
 export default function Home() {
   return (
     <div>
       <div className="home">
-        <Header />
+        {/* <Header /> */}
+        <ConnectButtonHeader />
         <div className="home__box">available escroc contracts</div>
         <div className="home__box">
           <div className="contract">
