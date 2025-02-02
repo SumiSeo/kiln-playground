@@ -1,29 +1,33 @@
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
+import "./AgreementNFT.sol";
 import "./Vault.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
-abstract contract VaultManager {
+contract VaultManager {
+    AgreementNFT public agreementNFT;
+    Vault public vault;
+
     struct Agreement {
         address payer;
         address payee;
         address arbiter;
         uint256 amount;
-        uint256 creationTime;
+        uint256 timestamp;
         bool payerApproved;
         bool payeeApproved;
+        uint256 nftId;
     }
 
     Agreement[] public agreements;
-    Vault public vault;
 
     event AgreementCreated(uint256 indexed id, address payer, address payee, address arbiter, uint256 amount);
-    event AgreementFunded(uint256 indexed id, uint256 depositedAmount);
+    event AgreementFunded(uint256 indexed id, uint256 depositedShares);
     event AgreementReleased(uint256 indexed id, uint256 totalAssets);
 
-    constructor(address _asset) {
+    constructor(address _asset, address _agreementNFT) {
         vault = new Vault(_asset);
+        agreementNFT = AgreementNFT(_agreementNFT);
     }
 
     function createAgreement(
@@ -34,7 +38,8 @@ abstract contract VaultManager {
     ) external returns (uint256) {
         require(_payer != _payee && _payer != _arbiter && _payee != _arbiter, "Addresses must be different");
 
-        agreements.push(Agreement(_payer, _payee, _arbiter, _amount, block.timestamp, false, false));
+        uint256 nftId = agreementNFT.mint(_payer);
+        agreements.push(Agreement(_payer, _payee, _arbiter, _amount, block.timestamp, false, false, nftId));
         uint256 agreementId = agreements.length - 1;
 
         emit AgreementCreated(agreementId, _payer, _payee, _arbiter, _amount);
@@ -47,34 +52,39 @@ abstract contract VaultManager {
         require(msg.sender == ag.payer, "Only payer can fund");
         require(!ag.payerApproved, "Already funded");
 
-        // Transférer les fonds du payer vers ce contrat
         require(vault.assetToken().transferFrom(msg.sender, address(this), ag.amount), "Transfer failed");
 
-        // Déposer les fonds dans le Vault
         uint256 depositedShares = vault.deposit(ag.amount, address(this));
         ag.payerApproved = true;
 
         emit AgreementFunded(_id, depositedShares);
     }
 
-    function releaseAgreement(uint256 _id) external {
-        require(_id < agreements.length, "Invalid agreement ID");
-        Agreement storage ag = agreements[_id];
-        require(ag.payerApproved && ag.payeeApproved, "Agreement not fully approved");
+   function releaseAgreement(uint256 _id) external {
+    require(_id < agreements.length, "Invalid agreement ID");
+    Agreement storage ag = agreements[_id];
+    require(ag.payerApproved && ag.payeeApproved, "Agreement not fully approved");
 
-        uint256 shares = vault.balanceOf(address(this));
-        uint256 totalAssets = vault.redeem(shares, address(this), address(this));
+    uint256 shares = vault.balanceOf(address(this));
+    uint256 totalAssets = vault.convertToAssets(shares);
 
-        require(vault.assetToken().transfer(ag.payee, ag.amount), "Transfer to payee failed");
+    // Calculer les actifs restants après la mise de départ
+    uint256 remainingAssets = totalAssets - ag.amount;
 
-        uint256 remainingAssets = totalAssets - ag.amount;
+    // Calculer 90% des actifs restants
+    uint256 ninetyPercent = (remainingAssets * 90) / 100;
 
-        uint256 share = totalAssets / 3;
+    // Diviser les 90% restants entre le payer et l'arbiter
+    uint256 payerShare = ninetyPercent / 2;
+    uint256 arbiterShare = ninetyPercent - payerShare;
 
-        require(vault.assetToken().transfer(ag.payer, share), "Transfer to payer failed");
-        require(vault.assetToken().transfer(ag.payee, share), "Transfer to payee failed");
-        require(vault.assetToken().transfer(ag.arbiter, share), "Transfer to arbiter failed");
+    // Transférer les parts
+    require(vault.assetToken().transfer(ag.payer, payerShare), "Transfer to payer failed");
+    require(vault.assetToken().transfer(ag.arbiter, arbiterShare), "Transfer to arbiter failed");
 
-        emit AgreementReleased(_id, totalAssets);
+    // Transférer le NFT du payer au payee
+    agreementNFT.transferFromVaultManager(ag.payer, ag.payee, ag.nftId);
+
+    emit AgreementReleased(_id, totalAssets);
     }
 }
