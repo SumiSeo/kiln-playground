@@ -1,8 +1,17 @@
 .markets{
+    margin:10rem 25rem;
     width:80%;
     height:100vh;
-    position:absolute;
-    right:0;
     color:white;
-    background-color: red;
+
+    &__title{
+        font-size:1.2rem;
+        font-weight:300;
+    }
+
+    &__table{
+        padding-top:2rem;
+
+
+    }
 }
