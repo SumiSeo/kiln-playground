@@ -65,12 +65,15 @@ abstract contract VaultManager {
         uint256 shares = vault.balanceOf(address(this));
         uint256 totalAssets = vault.redeem(shares, address(this), address(this));
 
+        require(vault.assetToken().transfer(ag.payee, ag.amount), "Transfer to payee failed");
+
+        uint256 remainingAssets = totalAssets - ag.amount;
+
         uint256 share = totalAssets / 3;
-        uint256 remaining = totalAssets - 2 * share;
 
         require(vault.assetToken().transfer(ag.payer, share), "Transfer to payer failed");
         require(vault.assetToken().transfer(ag.payee, share), "Transfer to payee failed");
-        require(vault.assetToken().transfer(ag.arbiter, remaining), "Transfer to arbiter failed");
+        require(vault.assetToken().transfer(ag.arbiter, share), "Transfer to arbiter failed");
 
         emit AgreementReleased(_id, totalAssets);
     }
