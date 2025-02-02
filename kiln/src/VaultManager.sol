@@ -4,7 +4,8 @@ import "./Vault.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
-abstract contract VaultManager {
+// abstract contract VaultManager {
+contract VaultManager {
     struct Agreement {
         address payer;
         address payee;
@@ -41,26 +42,35 @@ abstract contract VaultManager {
         return agreementId;
     }
 
+	/**
+	  *	Freelancer accept agreement
+	  */
+	function acceptAgreement(uint _id) external {
+		require (msg.sender == agreements[_id].payee);
+		agreements[_id].payeeApproved = true;
+	}
+
     function fundAgreement(uint256 _id) external {
         require(_id < agreements.length, "Invalid agreement ID");
-        Agreement storage ag = agreements[_id];
-        require(msg.sender == ag.payer, "Only payer can fund");
-        require(!ag.payerApproved, "Already funded");
+        // Agreement storage ag = agreements[_id];
+        require(msg.sender == agreements[_id].payer, "Only payer can fund");
+		// require(msg.value == agreements[_id].amount, "Incorrect amount");
+        require(!agreements[_id].payerApproved, "Already funded");
 
         // Transférer les fonds du payer vers ce contrat
-        require(vault.assetToken().transferFrom(msg.sender, address(this), ag.amount), "Transfer failed");
+        require(vault.assetToken().transferFrom(msg.sender, address(this), agreements[_id].amount), "Transfer failed");
 
         // Déposer les fonds dans le Vault
-        uint256 depositedShares = vault.deposit(ag.amount, address(this));
-        ag.payerApproved = true;
+        uint256 depositedShares = vault.deposit(agreements[_id].amount, address(this));
+        agreements[_id].payerApproved = true;
 
         emit AgreementFunded(_id, depositedShares);
     }
 
     function releaseAgreement(uint256 _id) external {
         require(_id < agreements.length, "Invalid agreement ID");
-        Agreement storage ag = agreements[_id];
-        require(ag.payerApproved && ag.payeeApproved, "Agreement not fully approved");
+        // Agreement storage ag = agreements[_id];
+        require(agreements[_id].payerApproved && agreements[_id].payeeApproved, "Agreement not fully approved");
 
         uint256 shares = vault.balanceOf(address(this));
         uint256 totalAssets = vault.redeem(shares, address(this), address(this));
@@ -68,9 +78,9 @@ abstract contract VaultManager {
         uint256 share = totalAssets / 3;
         uint256 remaining = totalAssets - 2 * share;
 
-        require(vault.assetToken().transfer(ag.payer, share), "Transfer to payer failed");
-        require(vault.assetToken().transfer(ag.payee, share), "Transfer to payee failed");
-        require(vault.assetToken().transfer(ag.arbiter, remaining), "Transfer to arbiter failed");
+        require(vault.assetToken().transfer(agreements[_id].payer, share), "Transfer to payer failed");
+        require(vault.assetToken().transfer(agreements[_id].payee, share), "Transfer to payee failed");
+        require(vault.assetToken().transfer(agreements[_id].arbiter, remaining), "Transfer to arbiter failed");
 
         emit AgreementReleased(_id, totalAssets);
     }

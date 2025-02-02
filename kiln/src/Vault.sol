@@ -15,6 +15,9 @@ contract Vault is IERC4626 {
         assetToken = IERC20(_asset);
     }
 
+	/**
+	  *	Allow user to deposit into vault
+	  */
     function deposit(uint256 assets, address receiver) external override returns (uint256) {
         require(assets > 0, "Assets must be greater than 0");
         require(receiver != address(0), "Receiver address cannot be zero");
@@ -30,7 +33,10 @@ contract Vault is IERC4626 {
 
         return sharesToMint;
     }
-
+	
+	/**
+	  *	Minting is the process of creating new tokens or share
+	  */
     function mint(uint256 shareAmount, address receiver) external override returns (uint256) {
         require(shareAmount > 0, "Shares must be greater than 0");
         require(receiver != address(0), "Receiver address cannot be zero");
