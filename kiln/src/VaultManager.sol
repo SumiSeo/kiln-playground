@@ -68,9 +68,9 @@ contract VaultManager {
     uint256 shares = vault.balanceOf(address(this));
     uint256 totalAssets = vault.convertToAssets(shares);
     uint256 remainingAssets = totalAssets - ag.amount;
-    uint256 ninetyPercent = (remainingAssets * 90) / 100;
-    uint256 payerShare = ninetyPercent / 2;
-    uint256 arbiterShare = ninetyPercent - payerShare;
+    uint256 eigthypercent = (remainingAssets * 80) / 100;
+    uint256 payerShare = eigthypercent / 2;
+    uint256 arbiterShare = eigthypercent - payerShare;
 
     // Transférer les parts
     require(vault.assetToken().transfer(ag.payer, payerShare), "Transfer to payer failed");
