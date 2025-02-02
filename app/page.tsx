@@ -11,8 +11,8 @@ export default function Home() {
   return (
     <div>
       <div className="home">
-        {/* <Header /> */}
-        <ConnectButtonHeader />
+        <Header />
+        {/* <ConnectButtonHeader /> */}
         <div className="home__box">available escroc contracts</div>
         <div className="home__box">
           <div className="contract">

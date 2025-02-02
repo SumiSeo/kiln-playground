@@ -18,6 +18,7 @@ export default function Header() {
       if (window.localStorage.getItem("connected")) {
         enableWeb3();
       }
+      console.log(account);
   }, [isWeb3Enabled]);
 
   useEffect(() => {
