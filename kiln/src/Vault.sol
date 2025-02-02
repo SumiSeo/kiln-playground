@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 contract Vault is IERC4626 {
     IERC20 public assetToken;
     uint256 public totalShares;
-    uint256 public totalManagedAssets; // Renommé pour éviter le conflit
+    uint256 public totalManagedAssets;
 
     mapping(address => uint256) public shares;
 
