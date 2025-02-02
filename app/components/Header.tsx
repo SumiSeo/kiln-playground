@@ -13,17 +13,19 @@ export default function Header() {
     isWeb3EnableLoading,
   } = useMoralis();
   useEffect(() => {
+    if (account != null) console.log(account);
     if (isWeb3Enabled) return;
     if (typeof window !== "undefined")
       if (window.localStorage.getItem("connected")) {
         enableWeb3();
       }
-      console.log(account);
   }, [isWeb3Enabled]);
 
   useEffect(() => {
     Moralis.onAccountChanged(() => {
       console.log("account changed");
+      if (account != null) console.log(account);
+
       if (account == null) {
         window.localStorage.removeItem("connected");
         deactivateWeb3();
