@@ -67,14 +67,8 @@ contract VaultManager {
 
     uint256 shares = vault.balanceOf(address(this));
     uint256 totalAssets = vault.convertToAssets(shares);
-
-    // Calculer les actifs restants après la mise de départ
     uint256 remainingAssets = totalAssets - ag.amount;
-
-    // Calculer 90% des actifs restants
     uint256 ninetyPercent = (remainingAssets * 90) / 100;
-
-    // Diviser les 90% restants entre le payer et l'arbiter
     uint256 payerShare = ninetyPercent / 2;
     uint256 arbiterShare = ninetyPercent - payerShare;
 
