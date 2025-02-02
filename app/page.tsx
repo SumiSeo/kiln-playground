@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Header from "./components/Header";
 import ConnectButtonHeader from "./components/ConnectButtonHeader";
+
 export default function Home() {
   return (
     <div>
@@ -86,3 +87,30 @@ export default function Home() {
     </div>
   );
 }
+
+
+
+// import Web3 from "web3";
+// import ABI from "../kiln/ABI.json";
+//
+// const web3 = new Web3("http://localhost:8545");
+// const contractAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+// const contract = new web3.eth.Contract(ABI, contractAddress);
+// async function createAgreementAndLog() {
+//   try {
+//     const result = await contract.methods.createAgreement(
+//       "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+//       "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+//       "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+//       1
+//     ).call();
+//     console.log(result);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+// contract.methods.createAgreement("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+// 								 "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+// 								 "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", 1).call()
+// 									.then((result: number) => { console.log(result);})
+// 									.catch((error: any) => { console.log(error);});
